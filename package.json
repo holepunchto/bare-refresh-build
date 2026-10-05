@@ -1,0 +1,76 @@
+{
+  "name": "bare-refresh-build",
+  "version": "0.0.0",
+  "description": "Build an application that boots a bare-refresh host",
+  "exports": {
+    "./package": "./package.json",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./pack": {
+      "types": "./lib/pack.d.ts",
+      "default": "./lib/pack.js"
+    }
+  },
+  "imports": {
+    "fs": {
+      "bare": "bare-fs",
+      "default": "fs"
+    },
+    "fs/promises": {
+      "bare": "bare-fs/promises",
+      "default": "fs/promises"
+    },
+    "os": {
+      "bare": "bare-os",
+      "default": "os"
+    },
+    "path": {
+      "bare": "bare-path",
+      "default": "path"
+    },
+    "url": {
+      "bare": "bare-url",
+      "default": "url"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "lib"
+  ],
+  "scripts": {
+    "format": "prettier --write . && lunte --fix",
+    "lint": "prettier --check . && lunte",
+    "test": "npm run test:bare && npm run test:node",
+    "test:bare": "brittle-bare --coverage test.js",
+    "test:node": "brittle-node --coverage test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holepunchto/bare-refresh-build.git"
+  },
+  "author": "Holepunch",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/holepunchto/bare-refresh-build/issues"
+  },
+  "homepage": "https://github.com/holepunchto/bare-refresh-build#readme",
+  "dependencies": {
+    "bare-build": "^1.1.0",
+    "bare-bundle-id": "^1.0.2",
+    "bare-fs": "^4.8.1",
+    "bare-module-traverse": "^2.5.6",
+    "bare-pack": "^2.2.2",
+    "bare-path": "^3.1.2",
+    "bare-url": "^2.5.4"
+  },
+  "devDependencies": {
+    "bare-bundle": "^1.11.0",
+    "brittle": "^4.3.0",
+    "lunte": "^1.8.0",
+    "prettier": "^3.4.1",
+    "prettier-config-holepunch": "^2.0.0"
+  }
+}
