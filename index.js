@@ -6,7 +6,7 @@ module.exports = exports = async function (bundle, opts = {}) {
   const {
     base,
     staging = path.join(base, '.refresh'),
-    out = path.join(base, 'out'),
+    out = path.join(base, 'build', 'dev'),
     host,
     name,
     identifier,
