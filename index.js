@@ -12,10 +12,11 @@ module.exports = exports = async function (bundle, opts = {}) {
     identifier,
     runtime,
     client,
-    options = {}
+    options = {},
+    attach = []
   } = opts
 
-  await stage(bundle, { staging, name, client, options })
+  await stage(bundle, { staging, name, client, options, attach })
 
   // Built from the base of the application, as the staged entry has no
   // `node_modules` of its own.
@@ -38,7 +39,7 @@ exports.stage = stage
 exports.pack = require('./lib/pack')
 
 async function stage(bundle, opts = {}) {
-  const { staging, name = 'app', client, options = {} } = opts
+  const { staging, name = 'app', client, options = {}, attach = [] } = opts
 
   await fs.mkdir(staging, { recursive: true })
 
@@ -59,14 +60,14 @@ async function stage(bundle, opts = {}) {
 
   // The bundle is not called `app.bundle`, as a packer types a file by its
   // extension and the `binary` type would then conflict.
-  await fs.writeFile(path.join(staging, 'index.js'), entry(client))
+  await fs.writeFile(path.join(staging, 'index.js'), entry(client, attach))
   await fs.writeFile(path.join(staging, 'app.bin'), bundle.toBuffer())
   await fs.writeFile(path.join(staging, 'options.json'), JSON.stringify(options))
 
   return staging
 }
 
-function entry(client) {
+function entry(client, attach) {
   return `\
 const boot = require('bare-refresh/boot')
 const connect = require('${client}')
@@ -74,7 +75,8 @@ const connect = require('${client}')
 module.exports = boot(require('./app.bin', { with: { type: 'binary' } }), {
   connect,
   options: require('./options.json'),
-  protocol: module.protocol
+  protocol: module.protocol,
+  attach: [${attach.map((specifier) => `require('${specifier}')`).join(', ')}]
 })
 `
 }

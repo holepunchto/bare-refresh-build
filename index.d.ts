@@ -10,6 +10,11 @@ interface StageOptions {
   client: string
   /** The options passed to the transport function. Defaults to `{}`. */
   options?: unknown
+  /**
+   * The specifiers of modules to attach to the host, such as `bare-native/overlay`. Each exports a
+   * function that is called with the host before it starts. Defaults to `[]`.
+   */
+  attach?: string[]
 }
 
 interface BuildOptions extends Omit<StageOptions, 'staging'> {
@@ -17,7 +22,7 @@ interface BuildOptions extends Omit<StageOptions, 'staging'> {
   base: string
   /** Defaults to `<base>/.refresh`. */
   staging?: string
-  /** The output directory. Defaults to `<base>/out-dev`. */
+  /** The output directory. Defaults to `<base>/build/dev`. */
   out?: string
   /** The host to build for, such as `darwin-arm64`. */
   host: string
