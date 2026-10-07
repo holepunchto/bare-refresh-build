@@ -87,6 +87,25 @@ test('the bundle carries an id', async (t) => {
   t.not(app1.id, app2.id, 'which is how a server tells one from another')
 })
 
+test('staging attaches the modules it is given to the host', async (t) => {
+  const base = await app(t, {
+    'package.json': '{ "name": "app", "version": "1.0.0", "main": "index.js" }',
+    'index.js': 'module.exports = 1\n'
+  })
+
+  const staging = path.join(base, '.refresh')
+
+  await build.stage(await bundle(base), {
+    staging,
+    client: 'bare-refresh-transport-tcp/connect',
+    attach: ['bare-native/overlay', './local']
+  })
+
+  const entry = fs.readFileSync(path.join(staging, 'index.js'), 'utf8')
+
+  t.ok(entry.includes("attach: [require('bare-native/overlay'), require('./local')]"))
+})
+
 test('staging writes a package that boots a host', async (t) => {
   const base = await app(t, {
     'package.json': '{ "name": "app", "version": "1.0.0", "main": "index.js" }',
@@ -112,6 +131,7 @@ test('staging writes a package that boots a host', async (t) => {
     'the transport it was given'
   )
   t.ok(entry.includes("'./app.bin'"), 'and not a bundle, whose extension would conflict')
+  t.ok(entry.includes('attach: []'), 'with nothing attached unless asked')
 
   t.alike(JSON.parse(fs.readFileSync(path.join(staging, 'options.json'), 'utf8')), { port: 9000 })
 
