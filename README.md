@@ -15,6 +15,7 @@ const { bundle } = await build.pack({ entry: 'app.js', host: 'darwin-arm64' })
 
 await build(bundle, {
   base: __dirname,
+  entry: 'app.js',
   host: 'darwin-arm64',
   name: 'Demo',
   identifier: 'to.holepunch.demo',

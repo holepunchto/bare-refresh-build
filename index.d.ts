@@ -20,6 +20,12 @@ interface StageOptions {
 interface BuildOptions extends Omit<StageOptions, 'staging'> {
   /** The directory of the application, which its dependencies are resolved from. */
   base: string
+  /**
+   * The entry of the application, as given to `pack()`. The addons it reaches are linked into the
+   * app, as the host only reaches its own. Without it, an addon only the application needs fails to
+   * load.
+   */
+  entry?: string
   /** Defaults to `<base>/.refresh`. */
   staging?: string
   /** The output directory. Defaults to `<base>/build/dev`. */
