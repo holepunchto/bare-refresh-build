@@ -5,6 +5,7 @@ const build = require('bare-build')
 module.exports = exports = async function (bundle, opts = {}) {
   const {
     base,
+    entry = null,
     staging = path.join(base, '.refresh'),
     out = path.join(base, 'build', 'dev'),
     host,
@@ -26,7 +27,10 @@ module.exports = exports = async function (bundle, opts = {}) {
     out,
     name,
     identifier,
-    runtime
+    runtime,
+    // The application is staged as bytes, so nothing the host reaches leads
+    // to the addons it needs.
+    link: entry === null ? [] : [entry]
   })) {
     //
   }
